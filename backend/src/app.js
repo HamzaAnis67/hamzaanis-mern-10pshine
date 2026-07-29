@@ -11,25 +11,30 @@ app.use(express.json());
 app.get("/health", async (req, res) => {
   let connection;
   let timeoutId;
+  let wasDestroyed = false; // Explicitly track connection destruction state
 
-  // Create a promise that rejects after 2 seconds
+  // 1. Define the timeout handler
   const timeoutPromise = new Promise((_, reject) => {
     timeoutId = setTimeout(() => {
+      wasDestroyed = true;
       if (connection) {
         logger.warn(
           "Health check timed out. Hard destroying database connection.",
         );
-        connection.destroy(); // Physically close TCP socket to stop the query on MySQL server
+        connection.destroy(); // Physically close TCP socket if connection was already acquired
       }
       reject(new Error("Database timeout exceeded"));
     }, 2000);
   });
 
-  try {
-    // Acquire a specific connection from the pool
-    connection = await pool.getConnection();
+  // 2. Prevent UnhandledPromiseRejection if the pool stalls completely
+  timeoutPromise.catch(() => {});
 
-    // Race the query execution against our hard timeout
+  try {
+    // 3. Race the connection acquisition itself against the timeout
+    connection = await Promise.race([pool.getConnection(), timeoutPromise]);
+
+    // 4. Race the database query against the timeout
     await Promise.race([connection.query("SELECT 1"), timeoutPromise]);
 
     logger.info("Health check passed successfully");
@@ -41,8 +46,9 @@ app.get("/health", async (req, res) => {
       .json({ status: "DOWN", message: "Service temporarily unavailable" });
   } finally {
     clearTimeout(timeoutId);
-    // Only release back to pool if it wasn't destroyed
-    if (connection && connection.connection._fatalError === null) {
+
+    // 5. Explicit safety check using our local flag to guarantee a dead connection never goes back to the pool
+    if (connection && !wasDestroyed) {
       connection.release();
     }
   }
