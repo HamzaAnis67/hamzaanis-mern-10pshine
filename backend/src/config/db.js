@@ -2,28 +2,39 @@ const mysql = require("mysql2/promise");
 const logger = require("../utils/logger");
 require("dotenv").config();
 
-// 1. Required environment variables list
-const requiredEnvVars = ["DB_HOST", "DB_USER", "DB_NAME"];
+// 1. Required environment variables list (Now strictly including DB_PASSWORD)
+const requiredEnvVars = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"];
 const missingEnvVars = requiredEnvVars.filter(
   (varName) => !process.env[varName],
 );
 
-// 2. Fail fast if any required variables are missing
+// 2. Fail fast if variables are completely missing from the environment
 if (missingEnvVars.length > 0) {
   const errorMessage = `CRITICAL CONFIG ERROR: Missing required environment variables: ${missingEnvVars.join(", ")}`;
   logger.error(errorMessage);
   throw new Error(errorMessage);
 }
 
-// 3. Create pool using strictly validated values (DB_PASSWORD can be empty locally, so we handle it gracefully)
+// 3. Security Check: Block empty passwords in production deployment environments
+const dbPassword = process.env.DB_PASSWORD;
+const isProduction = process.env.NODE_ENV === "production";
+
+if (dbPassword === "" && isProduction) {
+  const errorMessage =
+    "CRITICAL SECURITY ERROR: Blank database passwords are not allowed in production.";
+  logger.error(errorMessage);
+  throw new Error(errorMessage);
+}
+
+// 4. Create pool using strictly validated values
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD || "", // empty string fallback only for local passwords
+  password: dbPassword,
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
+  queueLimit: 100,
 });
 
 (async () => {
