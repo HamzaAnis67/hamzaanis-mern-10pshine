@@ -2,11 +2,14 @@ const mysql = require("mysql2/promise");
 const logger = require("../utils/logger");
 require("dotenv").config();
 
-// 1. Required environment variables list (Now strictly including DB_PASSWORD)
+// 1. Required environment variables list
 const requiredEnvVars = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"];
-const missingEnvVars = requiredEnvVars.filter(
-  (varName) => !process.env[varName],
-);
+
+// FIXED: Differentiate between undefined variables and explicitly empty strings
+const missingEnvVars = requiredEnvVars.filter((varName) => {
+  const value = process.env[varName];
+  return value === undefined || (varName !== "DB_PASSWORD" && value === "");
+});
 
 // 2. Fail fast if variables are completely missing from the environment
 if (missingEnvVars.length > 0) {

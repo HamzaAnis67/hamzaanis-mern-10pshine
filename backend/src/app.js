@@ -7,20 +7,30 @@ const app = express();
 
 app.use(express.json());
 
-// Helper function to create a timeout promise
-const timeout = (ms) =>
-  new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Database timeout exceeded")), ms),
-  );
-
 // 🩺 Health Check Route
 app.get("/health", async (req, res) => {
+  let connection;
+  let timeoutId;
+
+  // Create a promise that rejects after 2 seconds
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      if (connection) {
+        logger.warn(
+          "Health check timed out. Hard destroying database connection.",
+        );
+        connection.destroy(); // Physically close TCP socket to stop the query on MySQL server
+      }
+      reject(new Error("Database timeout exceeded"));
+    }, 2000);
+  });
+
   try {
-    // FIXED: Wrap the query in a Promise.race to fail fast if the database is unresponsive
-    await Promise.race([
-      pool.query("SELECT 1"),
-      timeout(2000), // 2 seconds timeout threshold
-    ]);
+    // Acquire a specific connection from the pool
+    connection = await pool.getConnection();
+
+    // Race the query execution against our hard timeout
+    await Promise.race([connection.query("SELECT 1"), timeoutPromise]);
 
     logger.info("Health check passed successfully");
     res.status(200).json({ status: "UP", server: "Running" });
@@ -29,6 +39,12 @@ app.get("/health", async (req, res) => {
     res
       .status(500)
       .json({ status: "DOWN", message: "Service temporarily unavailable" });
+  } finally {
+    clearTimeout(timeoutId);
+    // Only release back to pool if it wasn't destroyed
+    if (connection && connection.connection._fatalError === null) {
+      connection.release();
+    }
   }
 });
 
