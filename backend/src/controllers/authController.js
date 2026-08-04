@@ -1,9 +1,9 @@
 const pool = require("../config/db");
 const bcrypt = require("bcryptjs");
-const logger = require("../utils/logger"); // Import Pino Logger
+const jwt = require("jsonwebtoken");
 
 // 📝 SIGN UP
-const signup = async (req, res) => {
+const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
@@ -35,13 +35,12 @@ const signup = async (req, res) => {
       userId: result.insertId,
     });
   } catch (error) {
-    logger.error(`Signup Failed: ${error.stack}`); // Safe internal server log
-    res.status(500).json({ error: "Internal server error" }); // Generic safe client response
+    next(error);
   }
 };
 
-// 🔐 SIGN IN
-const signin = async (req, res) => {
+//  SIGN IN (Updated to issue JWT)
+const signin = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -65,13 +64,20 @@ const signin = async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
+    // Generate token
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" },
+    );
+
     res.status(200).json({
       message: "Login successful!",
+      token,
       user: { id: user.id, username: user.username, email: user.email },
     });
   } catch (error) {
-    logger.error(`Signin Failed: ${error.stack}`); // Safe internal server log
-    res.status(500).json({ error: "Internal server error" }); // Generic safe client response
+    next(error);
   }
 };
 

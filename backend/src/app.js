@@ -2,8 +2,13 @@ const express = require("express");
 const pool = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const logger = require("./utils/logger");
+const notesRoutes = require("./routes/notesRoutes");
+const httpLogger = require("./middlewares/loggerMiddleware");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
+
+app.use(httpLogger);
 
 app.use(express.json());
 
@@ -54,6 +59,13 @@ app.get("/health", async (req, res) => {
   }
 });
 
+app.get("/test-error", (req, res, next) => {
+  throw new Error("Simulated database failure or runtime crash!");
+});
+
 app.use("/api/auth", authRoutes);
+app.use("/api/notes", notesRoutes);
+
+app.use(errorHandler);
 
 module.exports = app;
