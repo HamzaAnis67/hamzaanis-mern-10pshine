@@ -1,14 +1,20 @@
 const logger = require("../utils/logger");
 
-// Express recognizes this as an error-handling middleware because it has exactly 4 arguments
-const errorHandler = (err, req, res, next) => {
-  // 1. Log the full exception stack trace internally using Pino
-  logger.error(`[EXCEPTON CAUGHT]: ${err.stack || err.message}`);
+/**
+ * @typedef {Error & { statusCode?: number }} CustomError
+ */
 
-  // 2. Determine the status code (default to 500 Internal Server Error)
+/**
+ * @param {CustomError} err
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const errorHandler = (err, req, res, next) => {
+  logger.error(`[EXCEPTION CAUGHT]: ${err.stack || err.message}`);
+
   const statusCode = err.statusCode || 500;
 
-  // 3. Provide a structured, meaningful JSON response to the user
   res.status(statusCode).json({
     error: {
       message: err.message || "An unexpected server error occurred.",

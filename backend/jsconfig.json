@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2022",
+    "checkJs": true,
+    "strict": false,
+    "noEmit": true
+  },
+  "include": ["src/**/*", "server.js"]
+}

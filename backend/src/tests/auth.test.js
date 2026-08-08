@@ -2,7 +2,6 @@ const request = require("supertest");
 const app = require("../app");
 
 describe("🔐 Auth API Endpoints", () => {
-  // Generate unique credentials for each test run to prevent duplicate email errors
   const timestamp = Date.now();
   const testUser = {
     username: `user_${timestamp}`,
@@ -11,36 +10,47 @@ describe("🔐 Auth API Endpoints", () => {
   };
 
   it("should register a new user successfully", async () => {
-    const { expect } = await import("chai");
+    try {
+      const { expect } = await import("chai");
+      const res = await request(app).post("/api/auth/signup").send(testUser);
 
-    const res = await request(app).post("/api/auth/signup").send(testUser);
-
-    expect(res.status).to.equal(201);
-    expect(res.body).to.have.property("userId");
-    expect(res.body.message).to.equal("User registered successfully!");
+      expect(res.status).to.equal(201);
+      expect(res.body).to.have.property("userId");
+      expect(res.body.message).to.equal("User registered successfully!");
+    } catch (error) {
+      throw new Error(`Signup test flow failed: ${error.message}`);
+    }
   });
 
   it("should fail registration if required fields are missing", async () => {
-    const { expect } = await import("chai");
+    try {
+      const { expect } = await import("chai");
+      const res = await request(app)
+        .post("/api/auth/signup")
+        .send({ email: testUser.email });
 
-    const res = await request(app)
-      .post("/api/auth/signup")
-      .send({ email: testUser.email });
-
-    expect(res.status).to.equal(400);
-    expect(res.body).to.have.property("error");
+      expect(res.status).to.equal(400);
+      expect(res.body).to.have.property("error");
+    } catch (error) {
+      throw new Error(
+        `Missing fields validation test failed: ${error.message}`,
+      );
+    }
   });
 
   it("should log in successfully and return a JWT token", async () => {
-    const { expect } = await import("chai");
+    try {
+      const { expect } = await import("chai");
+      const res = await request(app).post("/api/auth/signin").send({
+        email: testUser.email,
+        password: testUser.password,
+      });
 
-    const res = await request(app).post("/api/auth/signin").send({
-      email: testUser.email,
-      password: testUser.password,
-    });
-
-    expect(res.status).to.equal(200);
-    expect(res.body).to.have.property("token");
-    expect(res.body.user).to.have.property("email", testUser.email);
+      expect(res.status).to.equal(200);
+      expect(res.body).to.have.property("token");
+      expect(res.body.user).to.have.property("email", testUser.email);
+    } catch (error) {
+      throw new Error(`Signin test flow failed: ${error.message}`);
+    }
   });
 });

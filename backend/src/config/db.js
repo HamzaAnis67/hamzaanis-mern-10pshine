@@ -3,22 +3,27 @@ const logger = require("../utils/logger");
 require("dotenv").config();
 
 // 1. Required environment variables list
-const requiredEnvVars = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"];
+const requiredEnvVars = [
+  "DB_HOST",
+  "DB_USER",
+  "DB_PASSWORD",
+  "DB_NAME",
+  "JWT_SECRET",
+];
 
-// FIXED: Differentiate between undefined variables and explicitly empty strings
 const missingEnvVars = requiredEnvVars.filter((varName) => {
   const value = process.env[varName];
-  return value === undefined || (varName !== "DB_PASSWORD" && value === "");
+  return (
+    value === undefined || (varName !== "DB_PASSWORD" && value.trim() === "")
+  );
 });
 
-// 2. Fail fast if variables are completely missing from the environment
 if (missingEnvVars.length > 0) {
-  const errorMessage = `CRITICAL CONFIG ERROR: Missing required environment variables: ${missingEnvVars.join(", ")}`;
+  const errorMessage = `CRITICAL CONFIG ERROR: Missing or blank required environment variables: ${missingEnvVars.join(", ")}`;
   logger.error(errorMessage);
   throw new Error(errorMessage);
 }
 
-// 3. Security Check: Block empty passwords in production deployment environments
 const dbPassword = process.env.DB_PASSWORD;
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -29,7 +34,13 @@ if (dbPassword === "" && isProduction) {
   throw new Error(errorMessage);
 }
 
-// 4. Create pool using strictly validated values
+/**
+ * Extend MySQL Pool type definition to include custom testDbConnection method
+ * @typedef {import('mysql2/promise').Pool & { testDbConnection: () => Promise<void> }} CustomPool
+ */
+
+/** @type {CustomPool} */
+// @ts-ignore
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -40,14 +51,11 @@ const pool = mysql.createPool({
   queueLimit: 100,
 });
 
-(async () => {
-  try {
-    const connection = await pool.getConnection();
-    logger.info("Connected to MySQL Database via Pool successfully");
-    connection.release();
-  } catch (err) {
-    logger.error(`Database connection pool failed: ${err.message}`);
-  }
-})();
+// 2. Attach custom connection test method
+pool.testDbConnection = async () => {
+  const connection = await pool.getConnection();
+  logger.info("Connected to MySQL Database via Pool successfully");
+  connection.release();
+};
 
 module.exports = pool;

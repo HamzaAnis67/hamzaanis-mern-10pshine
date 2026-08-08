@@ -8,38 +8,44 @@ const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 
+app.disable("x-powered-by");
+
 app.use(httpLogger);
 
 app.use(express.json());
 
-// 🩺 Health Check Route
 app.get("/health", async (req, res) => {
   let connection;
   let timeoutId;
-  let wasDestroyed = false; // Explicitly track connection destruction state
+  let timedOut = false;
 
-  // 1. Define the timeout handler
+  const acquireConnection = pool.getConnection().then((conn) => {
+    if (timedOut) {
+      logger.warn(
+        "Late database connection acquired after timeout. Hard destroying socket.",
+      );
+      conn.destroy();
+      return null;
+    }
+    return conn;
+  });
+
   const timeoutPromise = new Promise((_, reject) => {
     timeoutId = setTimeout(() => {
-      wasDestroyed = true;
-      if (connection) {
-        logger.warn(
-          "Health check timed out. Hard destroying database connection.",
-        );
-        connection.destroy(); // Physically close TCP socket if connection was already acquired
-      }
+      timedOut = true;
       reject(new Error("Database timeout exceeded"));
     }, 2000);
   });
 
-  // 2. Prevent UnhandledPromiseRejection if the pool stalls completely
   timeoutPromise.catch(() => {});
 
   try {
-    // 3. Race the connection acquisition itself against the timeout
-    connection = await Promise.race([pool.getConnection(), timeoutPromise]);
+    connection = await Promise.race([acquireConnection, timeoutPromise]);
 
-    // 4. Race the database query against the timeout
+    if (!connection) {
+      throw new Error("Database timeout exceeded");
+    }
+
     await Promise.race([connection.query("SELECT 1"), timeoutPromise]);
 
     logger.info("Health check passed successfully");
@@ -52,8 +58,7 @@ app.get("/health", async (req, res) => {
   } finally {
     clearTimeout(timeoutId);
 
-    // 5. Explicit safety check using our local flag to guarantee a dead connection never goes back to the pool
-    if (connection && !wasDestroyed) {
+    if (connection && !timedOut) {
       connection.release();
     }
   }

@@ -1,9 +1,32 @@
 const app = require("./src/app");
+const pool = require("./src/config/db");
+const logger = require("./src/utils/logger");
 require("dotenv").config();
 
-// Fix: Safely parse the port to a base-10 integer
-const PORT = parseInt(process.env.PORT, 10) || 5000;
+const rawPort = process.env.PORT || "5000";
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server listening dynamically on port ${PORT}`);
-});
+const isValidDecimal = /^\d+$/.test(rawPort);
+const portNumber = Number.parseInt(rawPort, 10);
+
+if (!isValidDecimal || portNumber < 1 || portNumber > 65535) {
+  const errorMessage = `CRITICAL CONFIG ERROR: Invalid PORT '${rawPort}'. Port must be a decimal integer between 1 and 65535.`;
+  logger.error(errorMessage);
+  process.exit(1);
+}
+
+const startServer = async () => {
+  try {
+    await pool.testDbConnection();
+
+    app.listen(portNumber, () => {
+      logger.info(`🚀 Server listening dynamically on port ${portNumber}`);
+    });
+  } catch (err) {
+    logger.error(
+      `CRITICAL STARTUP ERROR: Database connection failed: ${err.message}`,
+    );
+    process.exit(1);
+  }
+};
+
+startServer();

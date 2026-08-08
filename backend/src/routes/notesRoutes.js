@@ -8,7 +8,7 @@ const {
 } = require("../controllers/notesController");
 const verifyToken = require("../middlewares/authMiddleware");
 
-router.use(verifyToken); // Protect all notes routes
+router.use(verifyToken);
 
 router.post("/", createNote);
 router.get("/", getNotes);
