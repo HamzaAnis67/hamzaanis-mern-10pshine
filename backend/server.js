@@ -18,7 +18,14 @@ const startServer = async () => {
   try {
     await pool.testDbConnection();
 
-    app.listen(portNumber, () => {
+    app.listen(portNumber, (err) => {
+      if (err) {
+        logger.error(
+          `CRITICAL STARTUP ERROR: Express server failed to start on port ${portNumber}: ${err.message}`,
+        );
+        process.exit(1);
+      }
+
       logger.info(`🚀 Server listening dynamically on port ${portNumber}`);
     });
   } catch (err) {

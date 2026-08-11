@@ -2,7 +2,6 @@ const mysql = require("mysql2/promise");
 const logger = require("../utils/logger");
 require("dotenv").config();
 
-// 1. Required environment variables list
 const requiredEnvVars = [
   "DB_HOST",
   "DB_USER",
@@ -34,13 +33,6 @@ if (dbPassword === "" && isProduction) {
   throw new Error(errorMessage);
 }
 
-/**
- * Extend MySQL Pool type definition to include custom testDbConnection method
- * @typedef {import('mysql2/promise').Pool & { testDbConnection: () => Promise<void> }} CustomPool
- */
-
-/** @type {CustomPool} */
-// @ts-ignore
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -51,7 +43,6 @@ const pool = mysql.createPool({
   queueLimit: 100,
 });
 
-// 2. Attach custom connection test method
 pool.testDbConnection = async () => {
   const connection = await pool.getConnection();
   logger.info("Connected to MySQL Database via Pool successfully");

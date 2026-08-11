@@ -1,8 +1,4 @@
 const logger = require("../utils/logger");
-
-/**
- * @type {any}
- */
 const pinoHttp = require("pino-http");
 
 const loggerMiddleware = pinoHttp({
