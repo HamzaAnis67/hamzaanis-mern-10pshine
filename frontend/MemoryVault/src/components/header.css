@@ -1,0 +1,59 @@
+.header_maindiv {
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 30px;
+  align-items: center;
+}
+.first_div {
+  display: flex;
+  gap: 10px;
+}
+.book_icon {
+  color: #a5a4a4;
+}
+.first_div p {
+  font-size: 22px;
+}
+.second_div {
+  position: relative;
+  width: 300px;
+}
+
+.second_div input {
+  width: 100%;
+  padding: 10px 15px 10px 40px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  border: 1px solid #a5a4a4;
+}
+
+.search_icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+}
+.second_div input:focus {
+  outline: none;
+  border: 1px solid #ccc;
+}
+.third_div {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.third_div p {
+  font-size: 20px;
+}
+.third_div button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 14px;
+}
+.hide {
+  display: none;
+}
