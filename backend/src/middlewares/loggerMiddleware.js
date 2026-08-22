@@ -15,8 +15,7 @@ const loggerMiddleware = pinoHttp({
   serializers: {
     req: (req) => ({
       method: req.method,
-      url: req.url,
-      query: req.query,
+      url: req.url ? req.url.split("?")[0] : req.url,
     }),
     res: (res) => ({
       statusCode: res.statusCode,

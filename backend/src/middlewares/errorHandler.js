@@ -5,9 +5,14 @@ const errorHandler = (err, req, res, next) => {
 
   const statusCode = err.statusCode || 500;
 
+  const message =
+    statusCode >= 500
+      ? "An unexpected server error occurred."
+      : err.message || "Something went wrong.";
+
   res.status(statusCode).json({
     error: {
-      message: err.message || "An unexpected server error occurred.",
+      message,
       status: statusCode,
       timestamp: new Date().toISOString(),
     },

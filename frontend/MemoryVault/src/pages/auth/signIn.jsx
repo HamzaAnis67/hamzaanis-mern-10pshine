@@ -38,25 +38,30 @@ function SignIn() {
       email,
       password,
     };
-    const response = await fetch("http://localhost:5000/api/auth/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    const data = await response.json();
-    if (data.message) {
-      setMessage(data.message);
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+      if (data.message) {
+        setMessage(data.message);
+        setOpen(true);
+      } else {
+        setMessage(data.error);
+        setOpen(true);
+      }
+      if (data.message === "Login successful!") {
+        localStorage.setItem("user", JSON.stringify(data.user.id));
+        localStorage.setItem("token", JSON.stringify(data.token));
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      setMessage("Unable to connect to the server. Please try again.");
       setOpen(true);
-    } else {
-      setMessage(data.error);
-      setOpen(true);
-    }
-    console.log(data);
-    if (data.message === "Login successful!") {
-      localStorage.setItem("user", JSON.stringify(data.user.id));
-      localStorage.setItem("token", JSON.stringify(data.token));
     }
   };
   return (
@@ -76,6 +81,7 @@ function SignIn() {
         <div className="signin_form_div">
           <form onSubmit={handleSubmit}>
             <p>Log-in form</p>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               placeholder="Email"
@@ -83,6 +89,7 @@ function SignIn() {
               onChange={handleChange}
               name="email"
             />
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               placeholder="Password"
