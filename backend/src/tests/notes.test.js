@@ -1,7 +1,8 @@
 const request = require("supertest");
+const pool = require("../config/db");
 const app = require("../app");
 
-describe("📝 Notes API Endpoints", () => {
+describe("Notes API Endpoints", () => {
   let authToken = "";
   let secondAuthToken = "";
   let createdNoteId = null;

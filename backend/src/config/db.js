@@ -44,9 +44,18 @@ const pool = mysql.createPool({
 });
 
 pool.testDbConnection = async () => {
-  const connection = await pool.getConnection();
-  logger.info("Connected to MySQL Database via Pool successfully");
-  connection.release();
+  let connection;
+  try {
+    connection = await pool.getConnection();
+    logger.info("Connected to MySQL Database via Pool successfully");
+  } catch (error) {
+    logger.error(`Database connection test failed: ${error.message}`);
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release();
+    }
+  }
 };
 
 module.exports = pool;

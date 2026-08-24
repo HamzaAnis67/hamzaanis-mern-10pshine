@@ -1,7 +1,8 @@
 const request = require("supertest");
 const app = require("../app");
+const pool = require("../config/db");
 
-describe("🔐 Auth API Endpoints", () => {
+describe("Auth API Endpoints", () => {
   const timestamp = Date.now();
   const testUser = {
     username: `user_${timestamp}`,

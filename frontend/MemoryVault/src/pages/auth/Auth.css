@@ -1,0 +1,224 @@
+@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap);
+* {
+  font-family: Poppins, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.signup_main_div {
+  background-color: #eeeef0;
+  min-height: 100vh;
+}
+
+.signup_heading_div {
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 5%;
+}
+.signup_heading_div h1 {
+  font-size: 40px;
+  font-weight: 300;
+}
+.signup_sub_div {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.signup_span_div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30vh;
+  margin-bottom: 20px;
+}
+.signup_span_div span {
+  font-size: 30px;
+  padding: 0 20px;
+}
+.signup_form_div form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #ccc;
+  margin: 0 20%;
+  padding: 20px 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+  background-color: #fff;
+}
+.signup_form_div form p {
+  padding: 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+.signup_form_div form label {
+  font-size: 14px;
+  font-weight: 300;
+}
+.signup_form_div form input {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #464545;
+  margin-bottom: 15px;
+}
+.signup_form_div form button {
+  border-radius: 5px;
+  padding: 5px 0;
+  background-color: #2749e3;
+  color: #fff;
+  font-size: 15px;
+  border: 1px solid #464545;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+.signup_form_div form a {
+  text-decoration: none;
+}
+@media screen and (min-width: 768px) {
+  .signup_sub_div {
+    display: grid;
+    grid-template-columns: 1.2fr 1.5fr;
+  }
+  .signup_form_div form {
+    width: 70%;
+  }
+  .signup_span_div {
+    height: 40vh;
+  }
+}
+@media screen and (min-width: 992px) {
+  .signup_sub_div {
+    display: grid;
+    grid-template-columns: 1.5fr 1.2fr;
+  }
+  .signup_span_div {
+    height: 50vh;
+  }
+}
+
+/*Sign in Page Css*/
+.signin_main_div {
+  background-color: #eeeef0;
+  min-height: 100vh;
+}
+.signin_heading_div {
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 5%;
+  padding-right: 10px;
+}
+.signin_heading_div h1 {
+  font-size: 40px;
+  font-weight: 300;
+}
+.signin_sub_div {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.signin_span_div {
+  order: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40vh;
+  margin-bottom: 30px;
+  margin-top: 50px;
+  flex-direction: column;
+}
+.signin_span_div span {
+  font-size: 30px;
+  padding: 0 5px 30px 20px;
+}
+.signin_span_div img {
+  height: 100%;
+  width: 40%;
+}
+.signin_form_div {
+  order: 2;
+}
+.signin_form_div form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #ccc;
+  margin: 0 20%;
+  padding: 20px 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+  background-color: #fff;
+}
+.signin_form_div form p {
+  padding: 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+.signin_form_div form label {
+  font-size: 14px;
+  font-weight: 300;
+}
+.signin_form_div form input {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #464545;
+  margin-bottom: 15px;
+}
+.signin_form_div form button {
+  border-radius: 5px;
+  padding: 5px 0;
+  background-color: #2749e3;
+  color: #fff;
+  font-size: 15px;
+  border: 1px solid #464545;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+.signin_form_div form a {
+  text-decoration: none;
+}
+@media screen and (min-width: 768px) {
+  .signin_sub_div {
+    display: grid;
+    grid-template-columns: 1.5fr 1.2fr;
+  }
+  .signin_form_div form {
+    width: 70%;
+    padding-bottom: 40px;
+  }
+  .signin_span_div {
+    order: 2;
+    margin-bottom: 0;
+    margin-top: 0;
+    align-items: center;
+    justify-content: start;
+  }
+  .signin_span_div span {
+    font-size: 20px;
+  }
+  .signin_span_div img {
+    height: 100%;
+    width: 70%;
+  }
+  .signin_form_div {
+    order: 1;
+  }
+}
+@media screen and (min-width: 992px) {
+  .signin_sub_div {
+    display: grid;
+    grid-template-columns: 1.1fr 1.5fr;
+  }
+  .signin_span_div {
+    height: 50vh;
+    order: 2;
+  }
+  .signin_span_div img {
+    height: 100%;
+    width: 70%;
+  }
+  .signin_form_div {
+    order: 1;
+  }
+}
