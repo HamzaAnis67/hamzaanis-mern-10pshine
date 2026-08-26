@@ -3,24 +3,33 @@ import Header from "../../components/Header";
 import NoteCard from "../../components/NoteCard";
 import "./Dashboard.css";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
+import Snackbar from "@mui/material/Snackbar";
 import { useEffect, useState } from "react";
 function Dashboard() {
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("token"));
   const [notes, setNotes] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
   if (!token) {
     navigate("/login");
   }
 
   const fetchNotes = async () => {
-    const response = await fetch("http://localhost:5000/api/notes", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    setNotes(data);
+    try {
+      const response = await fetch("http://localhost:5000/api/notes", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setNotes(data);
+    } catch (error) {
+      console.error("Note Fetch Error: ", error);
+      setMessage("Unable to fetch notes error. Please reload the page");
+      setOpen(true);
+    }
   };
   useEffect(() => {
     fetchNotes();
@@ -28,6 +37,13 @@ function Dashboard() {
 
   return (
     <div className="main_dashboard_div">
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={open}
+        onClose={() => setOpen(false)}
+        autoHideDuration={3000}
+        message={message}
+      />
       <Header sec_div={false} third_div={false} />
       <div className="first_subdiv">
         <div className="dashboard_heading_div">

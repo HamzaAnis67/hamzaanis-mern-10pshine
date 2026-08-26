@@ -8,22 +8,30 @@ function NoteCard({ note }) {
   const token = JSON.parse(localStorage.getItem("token"));
 
   const deleteSingleNote = async () => {
-    // alert(note.id);
-    const response = await fetch(`http://localhost:5000/api/notes/${note.id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    console.log(data);
-    setMessage(data.message);
-    setOpen(true);
-    if (data.message === "Note deleted successfully") {
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/notes/${note.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const data = await response.json();
+      console.log(data);
+      setMessage(data.message);
+      setOpen(true);
+      if (data.message === "Note deleted successfully") {
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Note Delete Error :", error);
+      setMessage("Unable to delete note. Please try again.");
+      setOpen(true);
     }
   };
   return (
