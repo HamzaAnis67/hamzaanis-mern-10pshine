@@ -1,5 +1,6 @@
 import "./notecard.css";
 import Snackbar from "@mui/material/Snackbar";
+import DOMPurify from "dompurify";
 import { useState } from "react";
 
 function NoteCard({ note }) {
@@ -47,14 +48,16 @@ function NoteCard({ note }) {
 
       <div
         className="note-content"
-        dangerouslySetInnerHTML={{ __html: note.content }}
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(note.content),
+        }}
       />
       <div className="note-dateandbtn-div">
         <div className="note-date">
           Updated: {new Date(note.updated_at).toLocaleDateString()}
         </div>
         <div className="note-btn-div">
-          <button className="btn-edit" type="submit">
+          <button className="btn-edit" type="button">
             Edit
           </button>
           <button

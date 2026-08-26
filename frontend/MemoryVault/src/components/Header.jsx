@@ -41,7 +41,7 @@ function Header({ sec_div, third_div }) {
             <p>MemoVault</p>
           </div>
           <div className={third_div ? "hide" : "third_div"}>
-            <p>Hamza Anis</p>
+            <p>{username}</p>
           </div>
         </div>
         <div className="mobile_layout_second_div">
@@ -53,7 +53,7 @@ function Header({ sec_div, third_div }) {
             <button
               type="button"
               onClick={() => {
-                console.log("hello world");
+                logout();
               }}
             >
               Logout

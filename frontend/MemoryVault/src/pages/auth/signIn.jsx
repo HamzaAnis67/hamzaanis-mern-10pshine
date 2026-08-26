@@ -103,13 +103,13 @@ function SignIn() {
             />
             <button type="submit">Access your Vault</button>
             <span>
-              New here? <a href="/">Sign-Up</a>
+              New here? <a href="/signup">Sign-Up</a>
             </span>
           </form>
         </div>
         <div className="signin_span_div">
           <span>Welcome back to your secure thought hub.</span>
-          <img src="login_img.jpg" alt="" />
+          <img src="login_img.jpg" alt="img" />
         </div>
       </div>
     </div>

@@ -24,7 +24,12 @@ function Dashboard() {
         },
       });
       const data = await response.json();
-      setNotes(data);
+      if (response.ok && Array.isArray(data)) {
+        setNotes(data);
+      } else {
+        setMessage(data.message || "Unable to fetch notes.");
+        setOpen(true);
+      }
     } catch (error) {
       console.error("Note Fetch Error: ", error);
       setMessage("Unable to fetch notes error. Please reload the page");
@@ -47,7 +52,7 @@ function Dashboard() {
       <Header sec_div={false} third_div={false} />
       <div className="first_subdiv">
         <div className="dashboard_heading_div">
-          <h3>My Notes (4)</h3>
+          <h3>My Notes ({notes.length})</h3>
           <span>Manage and organize your thoughts and ideas.</span>
         </div>
         <div className="dashboard_button_div">
