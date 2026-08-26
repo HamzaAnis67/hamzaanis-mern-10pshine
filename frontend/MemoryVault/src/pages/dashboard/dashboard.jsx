@@ -27,7 +27,7 @@ function Dashboard() {
       if (response.ok && Array.isArray(data)) {
         setNotes(data);
       } else {
-        setMessage(data.message || "Unable to fetch notes.");
+        setMessage(data.error ?? data.message ?? "Unable to fetch notes.");
         setOpen(true);
       }
     } catch (error) {

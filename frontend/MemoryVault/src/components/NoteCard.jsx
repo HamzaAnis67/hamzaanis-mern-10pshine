@@ -21,10 +21,13 @@ function NoteCard({ note }) {
         },
       );
       const data = await response.json();
-      console.log(data);
-      setMessage(data.message);
+      setMessage(
+        data.error ??
+          data.message ??
+          "Unable to delete note. Please try again.",
+      );
       setOpen(true);
-      if (data.message === "Note deleted successfully") {
+      if (response.ok) {
         setTimeout(() => {
           window.location.reload();
         }, 2000);

@@ -109,7 +109,7 @@ function SignIn() {
         </div>
         <div className="signin_span_div">
           <span>Welcome back to your secure thought hub.</span>
-          <img src="login_img.jpg" alt="img" />
+          <img src="login_img.jpg" alt="" />
         </div>
       </div>
     </div>
