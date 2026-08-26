@@ -2,8 +2,10 @@ import "./Auth.css";
 import Header from "../../components/Header";
 import { useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
+import { useNavigate } from "react-router-dom";
 
 function SignIn() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [open, setOpen] = useState(false);
@@ -56,7 +58,9 @@ function SignIn() {
       }
       if (data.message === "Login successful!") {
         localStorage.setItem("user", JSON.stringify(data.user.id));
+        localStorage.setItem("username", JSON.stringify(data.user.username));
         localStorage.setItem("token", JSON.stringify(data.token));
+        navigate("/");
       }
     } catch (error) {
       console.error("Signup error:", error);
