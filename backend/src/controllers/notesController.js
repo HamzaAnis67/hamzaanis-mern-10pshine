@@ -42,6 +42,24 @@ const getNotes = async (req, res, next) => {
   }
 };
 
+const getSingleNote = async (req, res, next) => {
+  const userId = req.user.id;
+  const { id } = req.params;
+
+  try {
+    const [notes] = await pool.query(
+      "SELECT id, title, content, created_at, updated_at FROM notes WHERE user_id = ? and id = ?",
+      [userId, id],
+    );
+    if (notes.length === 0) {
+      return res.status(404).json({ error: "Note not found or unauthorized" });
+    }
+    res.status(200).json(notes);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const updateNote = async (req, res, next) => {
   const { id } = req.params;
   const { title, content } = req.body;
@@ -91,4 +109,10 @@ const deleteNote = async (req, res, next) => {
   }
 };
 
-module.exports = { createNote, getNotes, updateNote, deleteNote };
+module.exports = {
+  createNote,
+  getNotes,
+  getSingleNote,
+  updateNote,
+  deleteNote,
+};

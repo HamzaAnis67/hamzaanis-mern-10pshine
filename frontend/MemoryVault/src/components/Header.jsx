@@ -1,64 +1,104 @@
 import "./header.css";
 import BookIcon from "@mui/icons-material/Book";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-function Header({ sec_div, third_div }) {
+function Header({ sec_div, third_div, onSearch }) {
   const navigate = useNavigate();
-  const username = JSON.parse(localStorage.getItem("username"));
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-  return (
-    <div className="header_maindiv">
-      <div className="first_div mobile-view-hidden">
-        <BookIcon className="book_icon" />
-        <p>MemoVault</p>
-      </div>
-      <div className="second_div mobile-view-hidden" hidden={sec_div}>
-        <SearchOutlinedIcon className="search_icon" />
-        <input type="text" placeholder="Search" />
-      </div>
-      <div className={third_div ? "hide" : "third_div mobile-view-hidden"}>
-        <p>{username}</p>
-        <button
-          type="button"
-          onClick={() => {
-            logout();
-          }}
-        >
-          Logout
-        </button>
-      </div>
 
-      <div className="header_mobile_maindiv">
-        <div className="mobile_layout_first_div">
-          <div className="first_div">
-            <BookIcon className="book_icon" />
-            <p>MemoVault</p>
-          </div>
-          <div className={third_div ? "hide" : "third_div"}>
-            <p>{username}</p>
-          </div>
+  const username = JSON.parse(localStorage.getItem("username"));
+
+  const logout = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.message === "Logged out successfully") {
+        toast.success(data.message);
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("logout error :", error);
+      toast.error("Unable to logout.");
+    }
+  };
+
+  return (
+    <div className="header_main">
+      <ToastContainer />
+      <div className="desktop_header">
+        <div className="desktop_logo">
+          <BookIcon className="desktop_book_icon" />
+          <p>MemoVault</p>
         </div>
-        <div className="mobile_layout_second_div">
-          <div className="second_div" hidden={sec_div}>
-            <SearchOutlinedIcon className="search_icon" />
-            <input type="text" placeholder="Search" />
+
+        {!sec_div && (
+          <div className="desktop_search">
+            <SearchOutlinedIcon className="desktop_search_icon" />
+
+            <input
+              type="text"
+              placeholder="Search"
+              onChange={(e) => onSearch?.(e.target.value)}
+            />
           </div>
-          <div className={third_div ? "hide" : "third_div"}>
-            <button
-              type="button"
-              onClick={() => {
-                logout();
-              }}
-            >
+        )}
+
+        {!third_div && (
+          <div className="desktop_user">
+            <p>{username}</p>
+
+            <button type="button" onClick={logout}>
               Logout
             </button>
           </div>
+        )}
+      </div>
+
+      <div className="mobile_header">
+        <div className="mobile_top">
+          <div className="mobile_logo">
+            <BookIcon className="mobile_book_icon" />
+            <p>MemoVault</p>
+          </div>
+
+          {!third_div && (
+            <div className="mobile_username">
+              <p>{username}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="mobile_bottom">
+          {!sec_div && (
+            <div className="mobile_search">
+              <SearchOutlinedIcon className="mobile_search_icon" />
+
+              <input
+                type="text"
+                placeholder="Search"
+                onChange={(e) => onSearch?.(e.target.value)}
+              />
+            </div>
+          )}
+
+          {!third_div && (
+            <div className="mobile_logout">
+              <button type="button" onClick={logout}>
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

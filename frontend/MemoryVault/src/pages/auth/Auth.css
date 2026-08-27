@@ -1,13 +1,7 @@
-@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap);
-* {
-  font-family: Poppins, sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 .signup_main_div {
   background-color: #eeeef0;
   min-height: 100vh;
+  margin-bottom: 50px;
 }
 
 .signup_heading_div {
@@ -88,6 +82,9 @@
   }
 }
 @media screen and (min-width: 992px) {
+  .signup_main_div {
+    margin-bottom: 0;
+  }
   .signup_sub_div {
     display: grid;
     grid-template-columns: 1.5fr 1.2fr;
@@ -101,6 +98,7 @@
 .signin_main_div {
   background-color: #eeeef0;
   min-height: 100vh;
+  margin-bottom: 50px;
 }
 .signin_heading_div {
   height: 20vh;
@@ -206,6 +204,9 @@
   }
 }
 @media screen and (min-width: 992px) {
+  .signin_main_div {
+    margin-bottom: 0;
+  }
   .signin_sub_div {
     display: grid;
     grid-template-columns: 1.1fr 1.5fr;

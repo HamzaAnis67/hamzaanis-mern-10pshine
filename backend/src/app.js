@@ -5,11 +5,17 @@ const httpLogger = require("./middlewares/loggerMiddleware");
 const errorHandler = require("./middlewares/errorHandler");
 const authRoutes = require("./routes/authRoutes");
 const notesRoutes = require("./routes/notesRoutes");
+const cookieParser = require("cookie-parser");
 var cors = require("cors");
 
 const app = express();
-app.use(cors());
-
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
+app.use(cookieParser());
 app.disable("x-powered-by");
 
 app.use(httpLogger);

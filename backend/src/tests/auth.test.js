@@ -39,17 +39,20 @@ describe("Auth API Endpoints", () => {
     }
   });
 
-  it("should log in successfully and return a JWT token", async () => {
+  it("should log in successfully and set an auth cookie", async () => {
     try {
       const { expect } = await import("chai");
+
       const res = await request(app).post("/api/auth/signin").send({
         email: testUser.email,
         password: testUser.password,
       });
 
       expect(res.status).to.equal(200);
-      expect(res.body).to.have.property("token");
       expect(res.body.user).to.have.property("email", testUser.email);
+
+      expect(res.headers["set-cookie"]).to.exist;
+      expect(res.headers["set-cookie"][0]).to.include("token=");
     } catch (error) {
       throw new Error(`Signin test flow failed: ${error.message}`);
     }
