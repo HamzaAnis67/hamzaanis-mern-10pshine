@@ -5,7 +5,11 @@ const createNote = async (req, res, next) => {
   const { title, content } = req.body;
   const userId = req.user.id;
 
-  if (!title || title.trim() === "" || content === undefined) {
+  if (
+    typeof title !== "string" ||
+    title.trim() === "" ||
+    content === undefined
+  ) {
     return res
       .status(400)
       .json({ error: "Title and content fields are required" });
@@ -65,7 +69,11 @@ const updateNote = async (req, res, next) => {
   const { title, content } = req.body;
   const userId = req.user.id;
 
-  if (!title || title.trim() === "" || content === undefined) {
+  if (
+    typeof title !== "string" ||
+    title.trim() === "" ||
+    content === undefined
+  ) {
     return res
       .status(400)
       .json({ error: "Title and content fields are required" });

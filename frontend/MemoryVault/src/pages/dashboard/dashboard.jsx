@@ -26,7 +26,8 @@ function Dashboard() {
       if (response.ok && Array.isArray(data)) {
         setNotes(data);
         setLoading(false);
-      } else if (data.error === "Access token missing or invalid") {
+      } else if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("username");
         navigate("/login");
       } else {
         toast.error(data.message ?? data.error ?? "Unable to fetch notes.");

@@ -6,7 +6,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const authRoutes = require("./routes/authRoutes");
 const notesRoutes = require("./routes/notesRoutes");
 const cookieParser = require("cookie-parser");
-const allowedOrigin = process.env.FRONTEND_URL;
+const allowedOrigin = process.env.FRONTEND_URL?.trim();
 const cors = require("cors");
 
 if (!allowedOrigin) {
