@@ -11,6 +11,7 @@ import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import { ToastContainer, toast } from "react-toastify";
 import "./NoteEditor.css";
 import { useNavigate, useParams } from "react-router-dom";
+import API_URL from "../../config/api";
 import { useEffect, useState } from "react";
 
 function NoteEditor() {
@@ -52,7 +53,7 @@ function NoteEditor() {
 
     const getNote = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/notes/${id}`, {
+        const response = await fetch(`${API_URL}/api/notes/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -62,6 +63,8 @@ function NoteEditor() {
 
         if (!response.ok) {
           toast.error("Failed to fetch note");
+          navigate("/");
+          return;
         }
 
         const data = await response.json();
@@ -91,7 +94,7 @@ function NoteEditor() {
     }
     try {
       if (isEditMode) {
-        const response = await fetch(`http://localhost:5000/api/notes/${id}`, {
+        const response = await fetch(`${API_URL}/api/notes/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -109,7 +112,7 @@ function NoteEditor() {
         }
         toast.success("Note Updated");
       } else {
-        const response = await fetch("http://localhost:5000/api/notes/", {
+        const response = await fetch(`${API_URL}/api/notes/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -148,6 +151,7 @@ function NoteEditor() {
         <div className="noteeditor_title_div">
           <label htmlFor="title">Title</label>
           <input
+            id="title"
             type="text"
             placeholder="Title"
             name="title"

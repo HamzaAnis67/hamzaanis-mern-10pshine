@@ -5,6 +5,7 @@ import "./Dashboard.css";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
 import { ToastContainer, toast } from "react-toastify";
 import Skeleton from "@mui/material/Skeleton";
+import API_URL from "../../config/api";
 import { useEffect, useState } from "react";
 function Dashboard() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ function Dashboard() {
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/api/notes", {
+      const response = await fetch(`${API_URL}/api/notes`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -25,7 +26,7 @@ function Dashboard() {
       if (response.ok && Array.isArray(data)) {
         setNotes(data);
         setLoading(false);
-      } else if (data.error === "Invalid or expired token") {
+      } else if (data.error === "Access token missing or invalid") {
         navigate("/login");
       } else {
         toast.error(data.message ?? data.error ?? "Unable to fetch notes.");

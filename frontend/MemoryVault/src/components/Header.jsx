@@ -3,15 +3,14 @@ import BookIcon from "@mui/icons-material/Book";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import API_URL from "../config/api";
 
 function Header({ sec_div, third_div, onSearch }) {
   const navigate = useNavigate();
-
   const username = JSON.parse(localStorage.getItem("username"));
-
   const logout = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/logout", {
+      const response = await fetch(`${API_URL}/api/auth/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,6 +19,7 @@ function Header({ sec_div, third_div, onSearch }) {
       });
       const data = await response.json();
       if (data.message === "Logged out successfully") {
+        localStorage.removeItem("username");
         toast.success(data.message);
         setTimeout(() => {
           navigate("/login");

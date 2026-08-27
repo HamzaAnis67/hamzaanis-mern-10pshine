@@ -26,7 +26,7 @@ if (missingEnvVars.length > 0) {
 const dbPassword = process.env.DB_PASSWORD;
 const isProduction = process.env.NODE_ENV === "production";
 
-if (dbPassword === "" && isProduction) {
+if (dbPassword.trim() === "" && isProduction) {
   const errorMessage =
     "CRITICAL SECURITY ERROR: Blank database passwords are not allowed in production.";
   logger.error(errorMessage);

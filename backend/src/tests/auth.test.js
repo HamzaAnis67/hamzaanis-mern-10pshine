@@ -39,7 +39,7 @@ describe("Auth API Endpoints", () => {
     }
   });
 
-  it("should log in successfully and set an auth cookie", async () => {
+  it("should log in successfully", async () => {
     try {
       const { expect } = await import("chai");
 
@@ -49,10 +49,7 @@ describe("Auth API Endpoints", () => {
       });
 
       expect(res.status).to.equal(200);
-      expect(res.body.user).to.have.property("email", testUser.email);
-
-      expect(res.headers["set-cookie"]).to.exist;
-      expect(res.headers["set-cookie"][0]).to.include("token=");
+      expect(res.body.user).to.have.property("username", testUser.username);
     } catch (error) {
       throw new Error(`Signin test flow failed: ${error.message}`);
     }

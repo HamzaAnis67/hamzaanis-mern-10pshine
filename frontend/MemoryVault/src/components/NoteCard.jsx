@@ -1,22 +1,20 @@
 import "./notecard.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import DOMPurify from "dompurify";
 import { useNavigate } from "react-router-dom";
+import API_URL from "../config/api";
 
 function NoteCard({ note }) {
   const navigate = useNavigate();
   const deleteSingleNote = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/notes/${note.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
+      const response = await fetch(`${API_URL}/api/notes/${note.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        credentials: "include",
+      });
       const data = await response.json();
       if (data.message) {
         toast.success(data.message);
@@ -35,7 +33,6 @@ function NoteCard({ note }) {
   };
   return (
     <div className="note-card">
-      <ToastContainer />
       <h3>{note.title}</h3>
 
       <div

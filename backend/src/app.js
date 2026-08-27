@@ -6,12 +6,17 @@ const errorHandler = require("./middlewares/errorHandler");
 const authRoutes = require("./routes/authRoutes");
 const notesRoutes = require("./routes/notesRoutes");
 const cookieParser = require("cookie-parser");
-var cors = require("cors");
+const allowedOrigin = process.env.FRONTEND_URL;
+const cors = require("cors");
+
+if (!allowedOrigin) {
+  throw new Error("FRONTEND_URL environment variable is not configured");
+}
 
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigin,
     credentials: true,
   }),
 );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Auth.css";
 import { ToastContainer, toast } from "react-toastify";
 import Header from "../../components/Header";
+import API_URL from "../../config/api";
 import { useNavigate } from "react-router-dom";
 
 function SignUp() {
@@ -55,7 +56,7 @@ function SignUp() {
       password,
     };
     try {
-      const response = await fetch("http://localhost:5000/api/auth/signup", {
+      const response = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,6 +99,7 @@ function SignUp() {
             <p>Sign-up form</p>
             <label htmlFor="username">Username</label>
             <input
+              id="username"
               type="text"
               placeholder="Username"
               value={username}
@@ -106,6 +108,7 @@ function SignUp() {
             />
             <label htmlFor="email">Email</label>
             <input
+              id="email"
               type="email"
               placeholder="Email"
               value={email}
@@ -114,6 +117,7 @@ function SignUp() {
             />
             <label htmlFor="password">Password</label>
             <input
+              id="password"
               type="password"
               placeholder="Password"
               value={password}

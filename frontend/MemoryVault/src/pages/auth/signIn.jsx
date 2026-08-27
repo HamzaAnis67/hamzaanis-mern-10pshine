@@ -2,6 +2,7 @@ import "./Auth.css";
 import Header from "../../components/Header";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import API_URL from "../../config/api";
 import { useNavigate } from "react-router-dom";
 
 function SignIn() {
@@ -37,7 +38,7 @@ function SignIn() {
       password,
     };
     try {
-      const response = await fetch("http://localhost:5000/api/auth/signin", {
+      const response = await fetch(`${API_URL}/api/auth/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +53,7 @@ function SignIn() {
         toast.error(data.error);
       }
       if (data.message === "Login successful!") {
-        localStorage.setItem("username", data.user.username);
+        localStorage.setItem("username", JSON.stringify(data.user.username));
         navigate("/");
       }
     } catch (error) {
@@ -73,6 +74,7 @@ function SignIn() {
             <p>Log-in form</p>
             <label htmlFor="email">Email</label>
             <input
+              id="email"
               type="email"
               placeholder="Email"
               value={email}
@@ -81,6 +83,7 @@ function SignIn() {
             />
             <label htmlFor="password">Password</label>
             <input
+              id="password"
               type="password"
               placeholder="Password"
               value={password}
