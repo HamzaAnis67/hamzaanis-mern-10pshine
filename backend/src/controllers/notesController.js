@@ -1,7 +1,6 @@
 const pool = require("../config/db");
 const logger = require("../utils/logger");
 
-//  CREATE A NOTE
 const createNote = async (req, res, next) => {
   const { title, content } = req.body;
   const userId = req.user.id;
@@ -29,7 +28,6 @@ const createNote = async (req, res, next) => {
   }
 };
 
-//  GET ALL NOTES FOR LOGGED-IN USER
 const getNotes = async (req, res, next) => {
   const userId = req.user.id;
 
@@ -44,7 +42,6 @@ const getNotes = async (req, res, next) => {
   }
 };
 
-//  UPDATE A NOTE
 const updateNote = async (req, res, next) => {
   const { id } = req.params;
   const { title, content } = req.body;
@@ -73,7 +70,6 @@ const updateNote = async (req, res, next) => {
   }
 };
 
-//  DELETE A NOTE
 const deleteNote = async (req, res, next) => {
   const { id } = req.params;
   const userId = req.user.id;
