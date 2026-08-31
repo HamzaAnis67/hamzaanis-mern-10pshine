@@ -1,134 +1,129 @@
-.header_mobile_maindiv {
+.header_main {
   background-color: #fff;
-  padding: 10px 30px;
 }
-.mobile_layout_first_div {
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
+.desktop_header {
+  display: none;
 }
-.mobile_layout_second_div {
+.desktop_logo {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-.first_div {
-  display: flex;
+  align-items: center;
   gap: 10px;
 }
-.book_icon {
-  margin-top: 5px;
-  color: #a5a4a4;
-}
-.first_div p {
+.desktop_logo p {
   font-size: 22px;
 }
-.second_div {
-  position: relative;
+.desktop_book_icon {
+  color: #a5a4a4;
 }
-
-.second_div input {
+.desktop_search {
+  position: relative;
+  width: 40%;
+}
+.desktop_search input {
   width: 100%;
-  padding: 5px 15px 5px 40px;
-  border-radius: 5px;
+  padding: 10px 15px 10px 40px;
   box-sizing: border-box;
   border: 1px solid #a5a4a4;
+  border-radius: 5px;
 }
-.search_icon {
+.desktop_search input:focus {
+  outline: none;
+  border-color: #ccc;
+}
+.desktop_search_icon {
   position: absolute;
   left: 12px;
-  top: 40%;
+  top: 50%;
   transform: translateY(-50%);
   color: #777;
 }
-.second_div input:focus {
-  outline: none;
-  border: 1px solid #ccc;
-}
-.third_div {
+.desktop_user {
   display: flex;
-  gap: 20px;
   align-items: center;
+  gap: 20px;
 }
-.third_div p {
+.desktop_user p {
   font-size: 20px;
 }
-.third_div button {
+.desktop_user button {
   padding: 10px 20px;
-  border-radius: 5px;
   border: 1px solid #ccc;
+  border-radius: 5px;
   background-color: #fff;
   font-size: 14px;
   cursor: pointer;
 }
-.hide {
-  display: none;
+.mobile_header {
+  display: block;
+  background-color: #fff;
+  padding: 10px 30px;
 }
-.mobile-view-hidden {
-  display: none;
+.mobile_top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mobile_logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mobile_logo p {
+  font-size: 22px;
+}
+.mobile_book_icon {
+  color: #a5a4a4;
+}
+.mobile_username p {
+  font-size: 20px;
+}
+.mobile_bottom {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+.mobile_search {
+  position: relative;
+  flex: 1;
+}
+.mobile_search input {
+  width: 100%;
+  padding: 5px 15px 5px 40px;
+  box-sizing: border-box;
+  border: 1px solid #a5a4a4;
+  border-radius: 5px;
+}
+.mobile_search input:focus {
+  outline: none;
+  border-color: #ccc;
+}
+.mobile_search_icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+}
+.mobile_logout {
+  flex-shrink: 0;
+}
+.mobile_logout button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
 }
 @media screen and (min-width: 768px) {
-  .header_mobile_maindiv {
+  .mobile_header {
     display: none;
   }
-  .header_maindiv {
-    background-color: #fff;
+  .desktop_header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 10px 30px;
-    align-items: center;
-  }
-  .first_div {
-    display: flex;
-    gap: 10px;
-  }
-  .book_icon {
-    margin-top: 5px;
-    color: #a5a4a4;
-  }
-  .first_div p {
-    font-size: 22px;
-  }
-  .second_div {
-    position: relative;
-  }
-
-  .second_div input {
-    width: 100%;
-    padding: 10px 15px 10px 40px;
-    border-radius: 5px;
-    box-sizing: border-box;
-    border: 1px solid #a5a4a4;
-  }
-
-  .search_icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #777;
-  }
-  .second_div input:focus {
-    outline: none;
-    border: 1px solid #ccc;
-  }
-  .third_div {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-  }
-  .third_div p {
-    font-size: 20px;
-  }
-  .third_div button {
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  .hide {
-    display: none;
   }
 }

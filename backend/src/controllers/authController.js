@@ -69,17 +69,30 @@ const signin = async (req, res, next) => {
     const token = jwt.sign(
       { id: user.id, username: user.username },
       process.env.JWT_SECRET,
-      { expiresIn: "24h" },
+      { expiresIn: "1h" },
     );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 60 * 60 * 1000,
+    });
 
     res.status(200).json({
       message: "Login successful!",
-      token,
-      user: { id: user.id, username: user.username, email: user.email },
+      user: { username: user.username },
     });
   } catch (error) {
     next(error);
   }
 };
 
-module.exports = { signup, signin };
+const logout = async (req, res, next) => {
+  res.clearCookie("token");
+  res.json({
+    message: "Logged out successfully",
+  });
+};
+
+module.exports = { signup, signin, logout };

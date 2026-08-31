@@ -1,32 +1,26 @@
 import "./notecard.css";
-import Snackbar from "@mui/material/Snackbar";
+import { toast } from "react-toastify";
 import DOMPurify from "dompurify";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import API_URL from "../config/api";
 
 function NoteCard({ note }) {
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const token = JSON.parse(localStorage.getItem("token"));
-
+  const navigate = useNavigate();
   const deleteSingleNote = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/notes/${note.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`${API_URL}/api/notes/${note.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        credentials: "include",
+      });
       const data = await response.json();
-      setMessage(
-        data.error ??
-          data.message ??
-          "Unable to delete note. Please try again.",
-      );
-      setOpen(true);
+      if (data.message) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.error ?? "Unable to delete note. Please try again.");
+      }
       if (response.ok) {
         setTimeout(() => {
           window.location.reload();
@@ -34,19 +28,11 @@ function NoteCard({ note }) {
       }
     } catch (error) {
       console.error("Note Delete Error :", error);
-      setMessage("Unable to delete note. Please try again.");
-      setOpen(true);
+      toast.error("Unable to delete note. Please try again.");
     }
   };
   return (
     <div className="note-card">
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={open}
-        onClose={() => setOpen(false)}
-        autoHideDuration={3000}
-        message={message}
-      />
       <h3>{note.title}</h3>
 
       <div
@@ -60,7 +46,13 @@ function NoteCard({ note }) {
           Updated: {new Date(note.updated_at).toLocaleDateString()}
         </div>
         <div className="note-btn-div">
-          <button className="btn-edit" type="button">
+          <button
+            className="btn-edit"
+            type="button"
+            onClick={() => {
+              navigate(`/notes/edit/${note.id}`);
+            }}
+          >
             Edit
           </button>
           <button

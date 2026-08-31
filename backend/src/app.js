@@ -5,11 +5,22 @@ const httpLogger = require("./middlewares/loggerMiddleware");
 const errorHandler = require("./middlewares/errorHandler");
 const authRoutes = require("./routes/authRoutes");
 const notesRoutes = require("./routes/notesRoutes");
-var cors = require("cors");
+const cookieParser = require("cookie-parser");
+const allowedOrigin = process.env.FRONTEND_URL?.trim();
+const cors = require("cors");
+
+if (!allowedOrigin) {
+  throw new Error("FRONTEND_URL environment variable is not configured");
+}
 
 const app = express();
-app.use(cors());
-
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true,
+  }),
+);
+app.use(cookieParser());
 app.disable("x-powered-by");
 
 app.use(httpLogger);

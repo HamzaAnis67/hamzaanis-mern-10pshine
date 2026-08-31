@@ -1,7 +1,8 @@
 import { useState } from "react";
 import "./Auth.css";
-import Snackbar from "@mui/material/Snackbar";
+import { ToastContainer, toast } from "react-toastify";
 import Header from "../../components/Header";
+import API_URL from "../../config/api";
 import { useNavigate } from "react-router-dom";
 
 function SignUp() {
@@ -9,8 +10,6 @@ function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
 
   const handleChange = (ev) => {
     const { value, name } = ev.target;
@@ -29,30 +28,25 @@ function SignUp() {
     ev.preventDefault();
 
     if (!username.trim()) {
-      setMessage("User Name is required");
-      setOpen(true);
+      toast.warning("User Name is required");
       return;
     }
     if (username.length > 10) {
-      setMessage("name should be less than 10 character's");
-      setOpen(true);
+      toast.warning("name should be less than 10 character's");
       return;
     }
 
     if (!email.trim()) {
-      setMessage("Email is required");
-      setOpen(true);
+      toast.warning("Email is required");
       return;
     }
 
     if (!password.trim()) {
-      setMessage("Password is required");
-      setOpen(true);
+      toast.warning("Password is required");
       return;
     }
     if (password.length < 6) {
-      setMessage("Password must be at least 6 characters long");
-      setOpen(true);
+      toast.warning("Password must be at least 6 characters long");
       return;
     }
 
@@ -62,7 +56,7 @@ function SignUp() {
       password,
     };
     try {
-      const response = await fetch("http://localhost:5000/api/auth/signup", {
+      const response = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,32 +67,23 @@ function SignUp() {
       const data = await response.json();
 
       if (data.error) {
-        setMessage(data.error);
+        toast.error(data.error);
       } else {
-        setMessage(data.message);
+        toast.success(data.message);
       }
-
-      setOpen(true);
 
       if (data.message === "User registered successfully!") {
         navigate("/login");
       }
     } catch (error) {
       console.error("Signup error:", error);
-      setMessage("Unable to connect to the server. Please try again.");
-      setOpen(true);
+      toast.error("Unable to connect to the server. Please try again.");
     }
   };
 
   return (
     <div className="signup_main_div">
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={open}
-        onClose={() => setOpen(false)}
-        autoHideDuration={3000}
-        message={message}
-      />
+      <ToastContainer />
       <Header sec_div={true} third_div={true} />
       <div className="signup_heading_div">
         <h1>Join MemoVault</h1>
@@ -114,6 +99,7 @@ function SignUp() {
             <p>Sign-up form</p>
             <label htmlFor="username">Username</label>
             <input
+              id="username"
               type="text"
               placeholder="Username"
               value={username}
@@ -122,6 +108,7 @@ function SignUp() {
             />
             <label htmlFor="email">Email</label>
             <input
+              id="email"
               type="email"
               placeholder="Email"
               value={email}
@@ -130,6 +117,7 @@ function SignUp() {
             />
             <label htmlFor="password">Password</label>
             <input
+              id="password"
               type="password"
               placeholder="Password"
               value={password}

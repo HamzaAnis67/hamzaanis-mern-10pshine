@@ -1,0 +1,90 @@
+.noteeditor_main_div {
+  background-color: #eeeef0;
+  min-height: 100vh;
+  margin-bottom: 10px;
+}
+.mobile_layout_second_div .third_div {
+  display: none;
+}
+.noteeditor_sub_div {
+  padding: 15px;
+  border: 1px solid #ccc;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+  background-color: #fff;
+  margin: 30px;
+  border-radius: 7px;
+}
+.noteeditor_title_div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.noteeditor_title_div label,
+.noteeditor_editor_div span {
+  font-size: 17px;
+  font-weight: 300;
+}
+.noteeditor_title_div input {
+  border-radius: 5px;
+  padding: 5px 10px;
+  border: 1px solid #000;
+}
+.noteeditor_editor_div {
+  margin-top: 15px;
+}
+.toolbar {
+  background-color: #efefef;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+.toolbar button {
+  padding: 7px 3px 0 5px;
+  border: transparent;
+  border-radius: 5px;
+}
+.btn_active {
+  background-color: #ccc;
+}
+.editor {
+  margin-top: 15px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+}
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: #999;
+  pointer-events: none;
+}
+
+.ProseMirror {
+  min-height: 200px;
+  padding: 12px;
+  outline: none;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 25px;
+  margin: 8px 0;
+}
+
+.ProseMirror li {
+  margin: 4px 0;
+}
+.sav_can_btn_div {
+  margin-top: 20px;
+}
+.sav_can_btn_div button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.save_btn {
+  margin-left: 15px;
+  background-color: #2749e3;
+  color: #fff;
+}

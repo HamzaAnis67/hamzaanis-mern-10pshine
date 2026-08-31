@@ -22,6 +22,11 @@
 .note-content {
   color: #555;
 }
+.note-content ul,
+.note-content ol {
+  padding-left: 25px;
+  margin: 8px 0;
+}
 
 .note-dateandbtn-div {
   margin-top: auto;

@@ -1,15 +1,14 @@
 import "./Auth.css";
 import Header from "../../components/Header";
 import { useState } from "react";
-import Snackbar from "@mui/material/Snackbar";
+import { ToastContainer, toast } from "react-toastify";
+import API_URL from "../../config/api";
 import { useNavigate } from "react-router-dom";
 
 function SignIn() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
 
   const handleChange = (ev) => {
     const { value, name } = ev.target;
@@ -25,14 +24,12 @@ function SignIn() {
     ev.preventDefault();
 
     if (!email.trim()) {
-      setMessage("Email is required");
-      setOpen(true);
+      toast.warning("Email is required");
       return;
     }
 
     if (!password.trim()) {
-      setMessage("Password is required");
-      setOpen(true);
+      toast.warning("Password is required");
       return;
     }
 
@@ -41,42 +38,32 @@ function SignIn() {
       password,
     };
     try {
-      const response = await fetch("http://localhost:5000/api/auth/signin", {
+      const response = await fetch(`${API_URL}/api/auth/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(userData),
       });
       const data = await response.json();
       if (data.message) {
-        setMessage(data.message);
-        setOpen(true);
+        toast.success(data.message);
       } else {
-        setMessage(data.error);
-        setOpen(true);
+        toast.error(data.error);
       }
       if (data.message === "Login successful!") {
-        localStorage.setItem("user", JSON.stringify(data.user.id));
         localStorage.setItem("username", JSON.stringify(data.user.username));
-        localStorage.setItem("token", JSON.stringify(data.token));
         navigate("/");
       }
     } catch (error) {
       console.error("Signup error:", error);
-      setMessage("Unable to connect to the server. Please try again.");
-      setOpen(true);
+      toast.error("Unable to connect to the server. Please try again.");
     }
   };
   return (
     <div className="signin_main_div">
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={open}
-        onClose={() => setOpen(false)}
-        autoHideDuration={3000}
-        message={message}
-      />
+      <ToastContainer />
       <Header sec_div={true} third_div={true} />
       <div className="signin_heading_div">
         <h1>MemoVault Secure Log In</h1>
@@ -87,6 +74,7 @@ function SignIn() {
             <p>Log-in form</p>
             <label htmlFor="email">Email</label>
             <input
+              id="email"
               type="email"
               placeholder="Email"
               value={email}
@@ -95,6 +83,7 @@ function SignIn() {
             />
             <label htmlFor="password">Password</label>
             <input
+              id="password"
               type="password"
               placeholder="Password"
               value={password}
