@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 function NoteEditor() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [title, setTitle] = useState();
+  const [title, setTitle] = useState("");
   const isEditMode = Boolean(id);
 
   const editor = useEditor({

@@ -1,0 +1,3 @@
+# SonarCloud credentials & properties
+sonar-project.properties
+.scannerwork/

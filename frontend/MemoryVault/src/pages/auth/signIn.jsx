@@ -3,7 +3,7 @@ import Header from "../../components/Header";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import API_URL from "../../config/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -23,44 +23,56 @@ function SignIn() {
   const handleSubmit = async (ev) => {
     ev.preventDefault();
 
-    if (!email.trim()) {
+    const cleanEmail = email.trim();
+    const cleanPassword = password.trim();
+
+    if (!cleanEmail) {
       toast.warning("Email is required");
       return;
     }
 
-    if (!password.trim()) {
+    if (!cleanPassword) {
       toast.warning("Password is required");
       return;
     }
 
-    const userData = {
-      email,
-      password,
-    };
+    const baseUrl = typeof API_URL === "string" && API_URL ? API_URL : "";
+    const endpoint = `${baseUrl}/api/auth/signin`;
+
     try {
-      const response = await fetch(`${API_URL}/api/auth/signin`, {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(userData),
+        body: JSON.stringify({ email: cleanEmail, password: cleanPassword }),
       });
+
       const data = await response.json();
-      if (data.message) {
+
+      if (response.ok && data.message === "Login successful!") {
         toast.success(data.message);
-      } else {
-        toast.error(data.error);
-      }
-      if (data.message === "Login successful!") {
-        localStorage.setItem("username", JSON.stringify(data.user.username));
+
+        const rawUsername =
+          typeof data?.user?.username === "string"
+            ? data.user.username.trim()
+            : "";
+
+        const isSafeUsername = /^[a-zA-Z0-9_.\s-]+$/.test(rawUsername);
+        const safeUsername = isSafeUsername ? rawUsername : "User";
+
+        localStorage.setItem("username", JSON.stringify(safeUsername));
+
         navigate("/");
+      } else {
+        toast.error(data.error || data.message || "Login failed");
       }
-    } catch (error) {
-      console.error("Signup error:", error);
+    } catch {
       toast.error("Unable to connect to the server. Please try again.");
     }
   };
+
   return (
     <div className="signin_main_div">
       <ToastContainer />
@@ -92,7 +104,7 @@ function SignIn() {
             />
             <button type="submit">Access your Vault</button>
             <span>
-              New here? <a href="/signup">Sign-Up</a>
+              New here? <Link to="/signup">Sign-Up</Link>
             </span>
           </form>
         </div>
